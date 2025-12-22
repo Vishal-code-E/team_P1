@@ -135,7 +135,9 @@ function addMessage(content, type, sources = null) {
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
     
-    return messageDiv.id = `msg-${Date.now()}`;
+    const id = `msg-${Date.now()}`;
+    messageDiv.id = id;
+    return id;
 }
 
 // Add loading message

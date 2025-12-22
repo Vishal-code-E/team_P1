@@ -1,7 +1,7 @@
 """Vector store management using ChromaDB."""
 import chromadb
 from chromadb.config import Settings as ChromaSettings
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain.docstore.document import Document
@@ -69,7 +69,7 @@ class VectorStore:
         query: str,
         k: int = 4,
         filter: Optional[Dict[str, Any]] = None
-    ) -> List[tuple[Document, float]]:
+    ) -> List[Tuple[Document, float]]:
         """
         Search for similar documents with relevance scores.
         
