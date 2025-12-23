@@ -1,4 +1,4 @@
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 
@@ -13,21 +13,25 @@ def create_qa_chain(vectorstore):
     Returns:
         RetrievalQA chain
     """
-    # Initialize ChatOpenAI with gpt-3.5-turbo
-    llm = ChatOpenAI(
-        model="gpt-3.5-turbo",
+    # Initialize Gemini Flash 1.5
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-1.5-flash",
         temperature=0
     )
     
-    # Define prompt template with hallucination prevention
-    template = """Use the following pieces of context to answer the question at the end.
-If you don't know the answer based on the context provided, just say "I don't know". 
-Do not try to make up an answer.
-Always provide the answer based strictly on the given context.
+    # Define prompt template with strict hallucination prevention
+    template = """You are an expert assistant. Use ONLY the following context to answer the question.
+If the answer is not explicitly present in the context, you MUST respond:
+"I don't know based on the provided documents."
 
-Context: {context}
+NEVER use outside knowledge. Answer ONLY from the context below.
+Always cite the source document filename.
 
-Question: {question}
+Context:
+{context}
+
+Question:
+{question}
 
 Answer:"""
     
