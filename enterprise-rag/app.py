@@ -5,6 +5,52 @@ from rag.retriever import create_vectorstore, load_vectorstore
 from rag.qa_chain import create_qa_chain
 
 
+def format_sources(source_documents):
+    """
+    Format source documents for clean display.
+    
+    Args:
+        source_documents: List of source documents
+        
+    Returns:
+        Formatted string of sources
+    """
+    if not source_documents:
+        return "None"
+    
+    sources = []
+    seen = set()
+    
+    for doc in source_documents:
+        source_file = os.path.basename(doc.metadata.get("source", "Unknown"))
+        # Avoid duplicates
+        if source_file not in seen:
+            seen.add(source_file)
+            sources.append(f"- {source_file}")
+    
+    return "\n".join(sources) if sources else "None"
+
+
+def get_confidence(source_documents):
+    """
+    Calculate confidence level based on number of retrieved sources.
+    
+    Args:
+        source_documents: List of source documents
+        
+    Returns:
+        Confidence level string: High, Medium, or Low
+    """
+    num_sources = len(source_documents) if source_documents else 0
+    
+    if num_sources >= 2:
+        return "High"
+    elif num_sources == 1:
+        return "Medium"
+    else:
+        return "Low"
+
+
 def initialize_system():
     """
     Initialize the RAG system: load docs, create vectorstore, create QA chain.
@@ -69,19 +115,24 @@ def run_chatbot():
         try:
             result = qa_chain.invoke({"query": question})
             
-            # Print answer
-            print("\nANSWER:")
-            print(result["result"])
+            # Get source documents and calculate confidence
+            source_docs = result.get("source_documents", [])
+            confidence = get_confidence(source_docs)
+            answer = result["result"]
             
-            # Print sources
-            print("\nSOURCES:")
-            sources = set()
-            for doc in result["source_documents"]:
-                source_file = os.path.basename(doc.metadata.get("source", "Unknown"))
-                sources.add(source_file)
+            # Handle negative case - force "I don't know" for low confidence
+            if confidence == "Low":
+                answer = "I don't know based on the provided documents."
             
-            for source in sources:
-                print(f"- {source}")
+            # Print formatted output
+            print("\nAnswer:")
+            print(answer)
+            
+            print("\nSources:")
+            print(format_sources(source_docs))
+            
+            print("\nConfidence:")
+            print(confidence)
             
             print("\n" + "-" * 60 + "\n")
             
