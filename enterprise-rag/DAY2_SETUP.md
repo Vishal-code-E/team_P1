@@ -5,7 +5,6 @@
 1. **Create `.env` file** in the `enterprise-rag/` directory:
 ```
 GOOGLE_API_KEY=your-google-api-key-here
-OPENAI_API_KEY=your-openai-key-for-embeddings
 ```
 
 2. **Install updated requirements**:
@@ -37,7 +36,7 @@ Try these questions to validate the system:
 
 ## What Changed
 
-- **LLM Migration:** OpenAI → Gemini Flash 1.5
+- **Full Google Migration:** System uses Google Gemini Flash 1.5 for LLM and Google embeddings (models/embedding-001)
 - **Hallucination Control:** Strict prompt prevents outside knowledge use
 - **Source Attribution:** Clean display of document filenames
 - **Confidence Scoring:** High (≥2 sources), Medium (1 source), Low (0 sources)
