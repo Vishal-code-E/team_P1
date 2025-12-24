@@ -9,9 +9,9 @@ A minimal RAG chatbot that answers internal finance/dev questions from company d
 pip install -r requirements.txt
 ```
 
-2. Set your OpenAI API key in `.env`:
+2. Set your Google API key in `.env`:
 ```
-OPENAI_API_KEY=your_actual_api_key
+GOOGLE_API_KEY=your_actual_api_key
 ```
 
 ## Run

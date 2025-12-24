@@ -1,4 +1,4 @@
-from langchain_openai import OpenAIEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.vectorstores import Chroma
 import os
 
@@ -14,8 +14,10 @@ def create_vectorstore(documents, persist_directory="data/vectorstore"):
     Returns:
         Chroma vectorstore object
     """
-    # Initialize OpenAI embeddings
-    embeddings = OpenAIEmbeddings()
+    # Initialize Google embeddings
+    embeddings = GoogleGenerativeAIEmbeddings(
+        model="models/embedding-001"
+    )
     
     # Create Chroma vector store
     vectordb = Chroma.from_documents(
@@ -37,7 +39,9 @@ def load_vectorstore(persist_directory="data/vectorstore"):
     Returns:
         Chroma vectorstore object
     """
-    embeddings = OpenAIEmbeddings()
+    embeddings = GoogleGenerativeAIEmbeddings(
+        model="models/embedding-001"
+    )
     
     vectordb = Chroma(
         persist_directory=persist_directory,
