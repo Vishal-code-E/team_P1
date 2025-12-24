@@ -16,7 +16,7 @@ def create_vectorstore(documents, persist_directory="data/vectorstore"):
     """
     # Initialize Google embeddings
     embeddings = GoogleGenerativeAIEmbeddings(
-        model="models/embedding-001"
+        model="models/text-embedding-004"
     )
     
     # Create Chroma vector store
@@ -40,7 +40,7 @@ def load_vectorstore(persist_directory="data/vectorstore"):
         Chroma vectorstore object
     """
     embeddings = GoogleGenerativeAIEmbeddings(
-        model="models/embedding-001"
+        model="models/text-embedding-004"
     )
     
     vectordb = Chroma(
