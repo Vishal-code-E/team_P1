@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from ingest.load_docs import load_and_chunk_documents
 from rag.retriever import create_vectorstore, load_vectorstore
 from rag.qa_chain import create_qa_chain
+from agent.intent_router import route_intent, get_direct_answer
 
 
 def format_sources(source_documents):
@@ -111,7 +112,44 @@ def run_chatbot():
         if not question:
             continue
         
-        # Get answer from QA chain
+        # INTENT ROUTING: Decide action before RAG
+        try:
+            intent_decision = route_intent(question)
+            decision = intent_decision.get("decision")
+            reason = intent_decision.get("reason", "")
+            
+            # Handle based on intent decision
+            if decision == "ANSWER_DIRECTLY":
+                # Conversational query - answer without retrieval
+                answer = get_direct_answer(question)
+                print("\nAnswer:")
+                print(answer)
+                print("\nSources:")
+                print("None (conversational response)")
+                print("\nConfidence:")
+                print("N/A")
+                print("\n" + "-" * 60 + "\n")
+                continue
+                
+            elif decision == "REFUSE":
+                # Out-of-scope query - refuse safely
+                print("\nAnswer:")
+                print("I don't know based on the provided documents.")
+                print("\nSources:")
+                print("None")
+                print("\nConfidence:")
+                print("Low")
+                print(f"\nReason: {reason}")
+                print("\n" + "-" * 60 + "\n")
+                continue
+            
+            # decision == "RETRIEVE_AND_ANSWER": proceed to RAG pipeline
+            
+        except Exception as e:
+            print(f"\nIntent routing error: {str(e)}")
+            print("Defaulting to retrieval...\n")
+        
+        # Get answer from QA chain (existing RAG pipeline)
         try:
             result = qa_chain.invoke({"query": question})
             
