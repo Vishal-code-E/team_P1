@@ -4,6 +4,7 @@ from ingest.load_docs import load_and_chunk_documents
 from rag.retriever import create_vectorstore, load_vectorstore
 from rag.qa_chain import create_qa_chain
 from agent.intent_router import route_intent, get_direct_answer
+from agent.answer_verifier import verify_answer
 
 
 def format_sources(source_documents):
@@ -164,8 +165,19 @@ def run_chatbot():
             confidence = get_confidence(source_docs)
             answer = result["result"]
             
+            # ANSWER VERIFICATION: Validate answer is fully supported by sources
+            is_valid = verify_answer(question, answer, source_docs)
+            
+            if not is_valid:
+                # Answer contains unsupported claims - override with safe refusal
+                print("[Verifier] Answer INVALID - contains unsupported claims")
+                answer = "I don't know based on the provided documents."
+                confidence = "Low"
+            else:
+                print("[Verifier] Answer VALID - all claims supported by sources")
+            
             # Handle negative case - force "I don't know" for low confidence
-            if confidence == "Low":
+            if confidence == "Low" and is_valid:
                 answer = "I don't know based on the provided documents."
             
             # Print formatted output
