@@ -164,7 +164,8 @@ def run_chatbot():
             source_docs = result.get("source_documents", [])
             confidence = get_confidence(source_docs)
             answer = result["result"]
-            ANSWER VERIFICATION: Validate answer is fully supported by sources
+            
+            # ANSWER VERIFICATION: Validate answer is fully supported by sources
             is_valid = verify_answer(question, answer, source_docs)
             
             if not is_valid:
@@ -176,8 +177,7 @@ def run_chatbot():
                 print("[Verifier] Answer VALID - all claims supported by sources")
             
             # Handle negative case - force "I don't know" for low confidence
-            if confidence == "Low" and is_valid - force "I don't know" for low confidence
-            if confidence == "Low":
+            if confidence == "Low" and is_valid:
                 answer = "I don't know based on the provided documents."
             
             # Print formatted output
