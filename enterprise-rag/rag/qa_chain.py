@@ -13,9 +13,9 @@ def create_qa_chain(vectorstore):
     Returns:
         RetrievalQA chain
     """
-    # Initialize Gemini Flash 1.5
+    # Initialize Gemini Pro
     llm = ChatGoogleGenerativeAI(
-        model="gemini-1.5-flash",
+        model="gemini-pro",
         temperature=0
     )
     
