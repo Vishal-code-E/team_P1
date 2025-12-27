@@ -31,9 +31,9 @@ def verify_answer(question: str, answer: str, source_docs: list) -> bool:
     # Combine all source texts
     combined_sources = "\n\n---\n\n".join(source_texts)
     
-    # Initialize Gemini Flash 1.5 with zero temperature for deterministic verification
+    # Initialize Gemini Pro with zero temperature for deterministic verification
     llm = ChatGoogleGenerativeAI(
-        model="gemini-1.5-flash",
+        model="gemini-pro",
         temperature=0
     )
     

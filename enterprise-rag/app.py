@@ -58,26 +58,48 @@ def initialize_system():
     Initialize the RAG system: load docs, create vectorstore, create QA chain.
     
     Returns:
-        QA chain object
+        QA chain object or None if initialization fails
     """
     # Check if vectorstore exists
     vectorstore_path = "data/vectorstore"
     
-    if os.path.exists(vectorstore_path) and os.listdir(vectorstore_path):
-        print("Loading existing vector store...")
-        vectorstore = load_vectorstore(vectorstore_path)
-    else:
-        print("Creating new vector store...")
-        # Load and chunk documents
-        documents = load_and_chunk_documents("data/raw")
-        print(f"Loaded {len(documents)} document chunks")
+    try:
+        if os.path.exists(vectorstore_path) and os.listdir(vectorstore_path):
+            print("Loading existing vector store...")
+            vectorstore = load_vectorstore(vectorstore_path)
+        else:
+            print("Creating new vector store...")
+            # Load and chunk documents
+            documents = load_and_chunk_documents("data/raw")
+            print(f"Loaded {len(documents)} document chunks")
+            
+            # Create vector store
+            vectorstore = create_vectorstore(documents, vectorstore_path)
+            print("Vector store created and persisted")
         
-        # Create vector store
-        vectorstore = create_vectorstore(documents, vectorstore_path)
-        print("Vector store created and persisted")
-    
-    # Create QA chain
-    qa_chain = create_qa_chain(vectorstore)
+        # Create QA chain
+        qa_chain = create_qa_chain(vectorstore)
+        return qa_chain
+        
+    except Exception as e:
+        error_msg = str(e)
+        
+        # Check for quota errors
+        if "quota" in error_msg.lower() or "429" in error_msg:
+            print("\n" + "!" * 60)
+            print("ERROR: API Quota Exceeded")
+            print("!" * 60)
+            print("\nThe Google API quota has been exceeded.")
+            print("This usually resets within 24 hours.")
+            print("\nOptions:")
+            print("1. Wait 24 hours for quota reset")
+            print("2. Use a different Google API key")
+            print("3. Enable billing on your Google Cloud project")
+            print("!" * 60 + "\n")
+        else:
+            print(f"\nInitialization Error: {error_msg}\n")
+        
+        return None
     
     return qa_chain
 
@@ -94,6 +116,11 @@ def run_chatbot():
     
     # Initialize system
     qa_chain = initialize_system()
+    
+    # Check if initialization succeeded
+    if qa_chain is None:
+        print("\nSystem initialization failed. Exiting...")
+        return
     
     print("\n" + "=" * 60)
     print("Chatbot ready! Ask questions about internal policies.")
