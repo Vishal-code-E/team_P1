@@ -181,3 +181,180 @@ See individual component licenses. This project combines open-source technologie
 ---
 
 **Built with discipline. Built like a professional product. Ready to impress.** 🚀
+# AI Knowledge Base + Chatbot (RAG)
+
+Company wikis are where docs go to die. Point this tool at your Confluence, PDFs and Slack history; ask "What's our AWS spending limit?" and get an instant, source-linked answer instead of ten blue links nobody clicks.
+
+## 🎯 Features
+
+- **Multi-Source Knowledge Ingestion**: Load documents from PDFs, Confluence wikis, and Slack conversations
+- **Intelligent Search**: Vector-based semantic search using OpenAI embeddings
+- **Source Attribution**: Every answer includes citations with links to original sources
+- **RAG-Powered Answers**: Uses Retrieval-Augmented Generation for accurate, context-aware responses
+- **Modern Web UI**: Clean, responsive interface for chatting and document management
+- **REST API**: Full API access for integration with other tools
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Python 3.8+
+- OpenAI API key
+- (Optional) Confluence credentials
+- (Optional) Slack bot token
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/Vishal-code-E/team_P1.git
+cd team_P1
+```
+
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+3. Configure environment variables:
+```bash
+cp .env.example .env
+# Edit .env and add your API keys
+```
+
+4. Run the application:
+```bash
+python main.py
+```
+
+5. Open your browser to `http://localhost:8000`
+
+## 🔧 Configuration
+
+Edit `.env` file with your credentials:
+
+```env
+# Required: OpenAI API Key
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Optional: Confluence Integration
+CONFLUENCE_URL=https://your-domain.atlassian.net
+CONFLUENCE_USERNAME=your_email@example.com
+CONFLUENCE_API_TOKEN=your_confluence_api_token
+
+# Optional: Slack Integration
+SLACK_BOT_TOKEN=xoxb-your-slack-bot-token
+SLACK_APP_TOKEN=xapp-your-slack-app-token
+```
+
+## 📖 Usage
+
+### Web Interface
+
+1. **Upload PDFs**: Use the PDF upload section to add documents to your knowledge base
+2. **Load Confluence**: Enter a space key to import wiki pages
+3. **Load Slack**: Enter a channel ID to import message history
+4. **Ask Questions**: Type your question in the chat interface and get instant answers with sources
+
+### API Usage
+
+#### Query the Knowledge Base
+```bash
+curl -X POST http://localhost:8000/api/query \
+  -H "Content-Type: application/json" \
+  -d '{"question": "What is our AWS spending limit?"}'
+```
+
+#### Upload PDFs
+```bash
+curl -X POST http://localhost:8000/api/upload/pdf \
+  -F "files=@document.pdf"
+```
+
+#### Load Confluence Space
+```bash
+curl -X POST http://localhost:8000/api/load/confluence \
+  -H "Content-Type: application/json" \
+  -d '{"space_key": "ENG", "limit": 100}'
+```
+
+#### Load Slack Channel
+```bash
+curl -X POST http://localhost:8000/api/load/slack \
+  -H "Content-Type: application/json" \
+  -d '{"channel_id": "C01234567", "days": 30}'
+```
+
+## 🏗️ Architecture
+
+```
+┌─────────────────┐
+│   Web UI / API  │
+└────────┬────────┘
+         │
+    ┌────▼─────┐
+    │   RAG    │
+    │  System  │
+    └────┬─────┘
+         │
+    ┌────▼──────────┐
+    │ Vector Store  │
+    │  (ChromaDB)   │
+    └────┬──────────┘
+         │
+    ┌────▼────────────────────┐
+    │  Document Connectors    │
+    ├─────────────────────────┤
+    │ • PDF Loader            │
+    │ • Confluence Connector  │
+    │ • Slack Connector       │
+    └─────────────────────────┘
+```
+
+### Components
+
+- **FastAPI Backend**: REST API for all operations
+- **ChromaDB**: Vector database for semantic search
+- **LangChain**: RAG pipeline and document processing
+- **OpenAI**: Embeddings (text-embedding-3-small) and LLM (GPT-4)
+
+## 📚 API Documentation
+
+Once running, visit `http://localhost:8000/docs` for interactive API documentation.
+
+## 🔒 Security Notes
+
+- Never commit your `.env` file
+- Keep API keys secure
+- Use environment variables for all sensitive data
+- Confluence and Slack tokens should have minimal required permissions
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📝 License
+
+This project is open source and available under the MIT License.
+
+## 🆘 Troubleshooting
+
+### "No such file or directory" errors
+Make sure all required directories exist:
+```bash
+mkdir -p data/chroma uploads static templates
+```
+
+### Confluence connection issues
+- Verify your Confluence URL includes the full domain
+- Ensure API token has read permissions
+- For Confluence Cloud, use your email as username
+
+### Slack integration issues
+- Bot token must have `channels:history` scope
+- Ensure bot is added to the channel you want to read
+- Use channel ID, not channel name
+
+## 📧 Support
+
+For issues and questions, please open an issue on GitHub.
