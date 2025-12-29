@@ -1,4 +1,5 @@
 import React from 'react';
+import { Badge } from '@/components/ui/badge';
 
 interface SourceBadgeProps {
   source: string;
@@ -6,8 +7,15 @@ interface SourceBadgeProps {
 
 export default function SourceBadge({ source }: SourceBadgeProps) {
   return (
-    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
-      📄 {source}
-    </span>
+    <Badge
+      variant="secondary"
+      className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium bg-blue-50 text-blue-700 border-2 border-blue-200 hover:bg-blue-100 hover:border-blue-300 transition-colors shadow-sm"
+    >
+      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M9 2a2 2 0 00-2 2v8a2 2 0 002 2h6a2 2 0 002-2V6.414A2 2 0 0016.414 5L14 2.586A2 2 0 0012.586 2H9z" />
+        <path d="M3 8a2 2 0 012-2v10h8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
+      </svg>
+      {source}
+    </Badge>
   );
 }
