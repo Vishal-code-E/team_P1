@@ -1,11 +1,24 @@
+"""
+Legacy document loading - DEPRECATED
+
+This module is kept for backward compatibility.
+New implementations should use the ingestion pipeline in:
+- enterprise-rag/ingest/orchestrator.py
+
+See INGESTION_PLATFORM.md for migration guide.
+"""
+
 from langchain_community.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 import os
+import warnings
 
 
 def load_and_chunk_documents(data_dir="data/raw"):
     """
-    Load markdown files from data/raw/ and chunk them.
+    [DEPRECATED] Load markdown files from data/raw/ and chunk them.
+    
+    Use IngestionOrchestrator for new implementations.
     
     Args:
         data_dir: Directory containing raw markdown files
@@ -13,6 +26,12 @@ def load_and_chunk_documents(data_dir="data/raw"):
     Returns:
         List of chunked documents
     """
+    warnings.warn(
+        "load_and_chunk_documents is deprecated. Use IngestionOrchestrator instead.",
+        DeprecationWarning,
+        stacklevel=2
+    )
+    
     documents = []
     
     # Load all markdown files from the data directory

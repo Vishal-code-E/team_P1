@@ -17,7 +17,7 @@ def route_intent(user_query: str) -> dict:
     Returns:
         dict with "decision" and "reason" keys
     """
-    # Initialize Gemini Pro with zero temperature for deterministic routing
+    # Initialize Gemini with zero temperature for deterministic routing
     llm = ChatGoogleGenerativeAI(
         model="gemini-pro",
         temperature=0
