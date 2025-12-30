@@ -1,4 +1,4 @@
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 
@@ -13,9 +13,9 @@ def create_qa_chain(vectorstore):
     Returns:
         RetrievalQA chain
     """
-    # Initialize Gemini Flash 1.5
-    llm = ChatGoogleGenerativeAI(
-        model="gemini-1.5-flash",
+    # Initialize GPT-4 Turbo (premium model)
+    llm = ChatOpenAI(
+        model="gpt-4-turbo-preview",
         temperature=0
     )
     
