@@ -33,7 +33,7 @@ def verify_answer(question: str, answer: str, source_docs: list) -> bool:
     
     # Initialize Gemini Pro with zero temperature for deterministic verification
     llm = ChatGoogleGenerativeAI(
-        model="gemini-pro",
+        model="gemini-1.5-flash",
         temperature=0
     )
     

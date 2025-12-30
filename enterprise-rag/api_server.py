@@ -266,5 +266,5 @@ if __name__ == '__main__':
     print("API Server starting on http://localhost:8000")
     print("=" * 60)
     
-    # Run Flask app
-    app.run(host='0.0.0.0', port=8000, debug=True)
+    # Run Flask app (debug=False to avoid reloader issues)
+    app.run(host='0.0.0.0', port=8000, debug=False)

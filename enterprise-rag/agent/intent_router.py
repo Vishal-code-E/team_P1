@@ -96,7 +96,7 @@ def get_direct_answer(user_query: str) -> str:
         Direct response from LLM
     """
     llm = ChatGoogleGenerativeAI(
-        model="gemini-pro",
+        model="gemini-1.5-flash",
         temperature=0.3
     )
     
