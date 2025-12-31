@@ -1,4 +1,4 @@
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
 import os
 
@@ -14,9 +14,10 @@ def create_vectorstore(documents, persist_directory="data/vectorstore"):
     Returns:
         Chroma vectorstore object
     """
-    # Initialize Google embeddings
-    embeddings = GoogleGenerativeAIEmbeddings(
-        model="models/text-embedding-004"
+    # Initialize OpenAI embeddings
+    embeddings = OpenAIEmbeddings(
+        model="text-embedding-3-small",
+        openai_api_key=os.getenv("OPENAI_API_KEY")
     )
     
     # Create Chroma vector store
@@ -39,8 +40,9 @@ def load_vectorstore(persist_directory="data/vectorstore"):
     Returns:
         Chroma vectorstore object
     """
-    embeddings = GoogleGenerativeAIEmbeddings(
-        model="models/text-embedding-004"
+    embeddings = OpenAIEmbeddings(
+        model="text-embedding-3-small",
+        openai_api_key=os.getenv("OPENAI_API_KEY")
     )
     
     vectordb = Chroma(

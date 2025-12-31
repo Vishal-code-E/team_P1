@@ -1,5 +1,6 @@
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
 import json
+import os
 
 
 def route_intent(user_query: str) -> dict:
@@ -17,10 +18,11 @@ def route_intent(user_query: str) -> dict:
     Returns:
         dict with "decision" and "reason" keys
     """
-    # Initialize Gemini with zero temperature for deterministic routing
-    llm = ChatGoogleGenerativeAI(
-        model="gemini-pro",
-        temperature=0
+    # Initialize OpenAI with zero temperature for deterministic routing
+    llm = ChatOpenAI(
+        model="gpt-4",
+        temperature=0,
+        openai_api_key=os.getenv("OPENAI_API_KEY")
     )
     
     # Strict system prompt for intent classification
@@ -95,9 +97,10 @@ def get_direct_answer(user_query: str) -> str:
     Returns:
         Direct response from LLM
     """
-    llm = ChatGoogleGenerativeAI(
-        model="gemini-pro",
-        temperature=0.3
+    llm = ChatOpenAI(
+        model="gpt-4",
+        temperature=0.3,
+        openai_api_key=os.getenv("OPENAI_API_KEY")
     )
     
     prompt = f"""You are a helpful enterprise assistant.
