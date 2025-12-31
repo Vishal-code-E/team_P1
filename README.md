@@ -34,7 +34,15 @@ A complete data ingestion platform that handles multi-source knowledge bases wit
 
 ## 🚀 Quick Start
 
-### Option 1: Full Stack (Recommended)
+### Try Live Demo
+
+**🌐 Live Application**: https://memorg-ai.vercel.app
+
+No installation required - try MemOrg AI instantly in your browser!
+
+### Local Development
+
+**Option 1: Full Stack (Recommended)**
 
 **Terminal 1 - Backend:**
 ```bash
@@ -52,12 +60,22 @@ npm run dev
 
 **Browser:** Navigate to **http://localhost:3000**
 
-### Option 2: Ingestion Platform Only
+**Option 2: Ingestion Platform Only**
 
 ```bash
 cd enterprise-rag
 pip install -r requirements.txt
 python examples/ingestion_demo.py
+```
+
+### Deploy Your Own
+
+See **[DEPLOYMENT_VERCEL.md](DEPLOYMENT_VERCEL.md)** for complete deployment guide.
+
+**Quick Deploy to Vercel:**
+```bash
+cd enterprise-rag-frontend
+vercel --prod
 ```
 
 ---

@@ -174,9 +174,9 @@ X-API-Key: demo_user2_key_abcde
 
 ## 🎬 CLOSING STATEMENT
 
-*"What you just saw is an Agentic AI platform that combines production-grade architecture with demo-appropriate scope. The agent makes autonomous decisions, verifies its own answers, and never hallucinates. Multi-source ingestion with immutable storage means you can re-index safely as models improve. Token-based auth and user-scoped conversations provide enterprise security within demo constraints."*
+*"What you just saw is MemOrg AI - Your Organization's Memory. An Agentic AI platform that combines production-grade architecture with demo-appropriate scope. The agent makes autonomous decisions, verifies its own answers, and never hallucinates. Multi-source ingestion with immutable storage means you can re-index safely as models improve. Token-based auth and user-scoped conversations provide enterprise security within demo constraints."*
 
-*"This isn't just a chatbot—it's an intelligent knowledge assistant that knows when to retrieve, when to refuse, and when to verify. Built on OpenAI and Flask, designed for enterprise demos, ready for scrutiny."*
+*"This isn't just a chatbot—it's an intelligent knowledge assistant that knows when to retrieve, when to refuse, and when to verify. Built on OpenAI and Flask, deployed at https://memorg-ai.vercel.app, ready for scrutiny."*
 
 ---
 

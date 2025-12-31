@@ -1,6 +1,8 @@
 # SUBMISSION READINESS CHECKLIST
 
-**Enterprise RAG Platform - Final Pre-Submission Validation**
+**MemOrg AI - Final Pre-Submission Validation**
+
+**Live Demo**: https://memorg-ai.vercel.app
 
 Date: December 31, 2025  
 Reviewer: Principal Software Engineer  
