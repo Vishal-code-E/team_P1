@@ -1,6 +1,7 @@
 from langchain_openai import ChatOpenAI
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
+import os
 
 
 def create_qa_chain(vectorstore):
@@ -13,10 +14,11 @@ def create_qa_chain(vectorstore):
     Returns:
         RetrievalQA chain
     """
-    # Initialize GPT-4 Turbo (premium model)
+    # Initialize latest GPT-4 Turbo model
     llm = ChatOpenAI(
-        model="gpt-4-turbo-preview",
-        temperature=0
+        model=os.getenv("OPENAI_MODEL", "gpt-4-turbo"),
+        temperature=0,
+        openai_api_key=os.getenv("OPENAI_API_KEY")
     )
     
     # Define prompt template with strict hallucination prevention

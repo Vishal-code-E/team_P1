@@ -34,7 +34,7 @@ def verify_answer(question: str, answer: str, source_docs: list) -> bool:
     
     # Initialize OpenAI with zero temperature for deterministic verification
     llm = ChatOpenAI(
-        model="gpt-4",
+        model=os.getenv("OPENAI_MODEL", "gpt-4-turbo"),
         temperature=0,
         openai_api_key=os.getenv("OPENAI_API_KEY")
     )
