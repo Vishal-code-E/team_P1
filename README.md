@@ -267,24 +267,73 @@ orchestrator.initialize_vector_index()
 ### Data Integrity (NEW)
 - **Immutable Storage**: Raw data never overwritten
 - **Audit Trails**: Every ingestion operation logged
-- **Version CDeployment
+- **Version Control**: Index versions tracked
+- **Backup Strategy**: Automatic backups before rebuilds
+- **Recovery Paths**: Rebuild corrupted indexes from raw data
+
+### Environment Variables
+```bash
+# Required
+OPENAI_API_KEY=sk-...
+
+# Optional: Slack Integration
+SLACK_BOT_TOKEN=xoxb-...
+
+# Optional: Confluence Integration
+CONFLUENCE_URL=https://your-domain.atlassian.net
+CONFLUENCE_USERNAME=user@example.com
+CONFLUENCE_API_TOKEN=...
+```
+
+---
+
+## 🚢 Deployment
+
+### Live Demo
+**Frontend**: https://memorg-ai.vercel.app  
+**Complete Guide**: [DEPLOYMENT_VERCEL.md](DEPLOYMENT_VERCEL.md)
+
+### Quick Deploy to Vercel
+
+**Frontend**:
+```bash
+cd enterprise-rag-frontend
+vercel --prod
+```
+
+**Backend** (Python on Vercel):
+```bash
+cd enterprise-rag
+vercel --prod
+```
+
+### Other Deployment Options
+
+**Frontend Platforms**:
 - **Vercel** (recommended) - One-click Next.js deployment
 - **Netlify** - Static site hosting
 - **AWS Amplify** - Full-stack deployment
 - **Docker** - Containerized deployment
 
-### Backend Deployment
-- **Google Cloud Run** - Serverless container platform
+**Backend Platforms**:
+- **Vercel** - Serverless Python functions
+- **Railway** - One-command deployment
+- **Render** - Platform as a service
+- **Google Cloud Run** - Serverless containers
 - **AWS EC2** - Virtual machine hosting
-- **Heroku** - Platform as a service
 - **Docker** - Containerized deployment
 
-### Data & Ingestion
+**Data & Storage**:
 - **Local Storage** (current) - File-based for demo/small team
 - **Cloud Storage** (future) - S3/GCS for raw data at scale
 - **Managed Vector DB** (future) - Pinecone/Weaviate for distributed scale
 
-See [SETUP_GUIDE.md](SETUP_GUIDE.md) and [INGESTION_PLATFORM.md](enterprise-rag/INGESTION_PLATFORM.md) for detailed
+See [DEPLOYMENT_VERCEL.md](DEPLOYMENT_VERCEL.md) for detailed deployment instructions.
+
+---
+
+## 🤝 Contributing
+
 ### Project Philosophy
 This project combines demo readiness with production-quality architecture:
 
@@ -527,7 +576,16 @@ Built with these excellent open-source tools:
 
 ---
 
-**Questions? Start with [QUICKSTART.md](QUICKSTART.md) or [enterprise-rag/README_INGESTION.md](enterprise-rag/README_INGESTION.md)**
+## 📝 License
+
+This project is open source and available under the MIT License.
+
+---
+
+**MemOrg AI - Your Organization's Memory** 🧠  
+**Live Demo**: https://memorg-ai.vercel.app  
+**Documentation**: https://github.com/Vishal-code-E/team_P1  
+**Questions?** Start with [QUICKSTART.md](QUICKSTART.md) or [DEPLOYMENT_VERCEL.md](DEPLOYMENT_VERCEL.md)
     │  System  │
     └────┬─────┘
          │
