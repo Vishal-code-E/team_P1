@@ -4,7 +4,9 @@
 
 Transform scattered knowledge into actionable intelligence. MemOrg AI unifies Slack conversations, Confluence wikis, and documents into a single AI-powered knowledge base that delivers instant, source-verified answers—no more hunting through wikis, PDFs, or chat history.
 
-**Powered by OpenAI | Built on Flask | Live at https://memorg-ai.vercel.app**
+**Powered by OpenAI | Built on Flask | Deploy to Vercel ⬇️**
+
+> **🚀 Quick Deploy**: See instructions below to get your own deployment live in minutes!
 
 ## 🌟 Platform Highlights
 
@@ -34,15 +36,25 @@ A complete data ingestion platform that handles multi-source knowledge bases wit
 
 ## 🚀 Quick Start
 
-### Try Live Demo
+### Deploy Your Own (Recommended)
 
-**🌐 Live Application**: https://memorg-ai.vercel.app
+**Frontend to Vercel (2 minutes)**:
+```bash
+cd enterprise-rag-frontend
+npm install
+npm run build  # Test build locally first
+vercel --prod  # Deploy to Vercel
+```
 
-No installation required - try MemOrg AI instantly in your browser!
+**You'll get a URL like**: `https://your-project.vercel.app`
+
+**Backend Options**:
+- **Local**: Keep backend on your machine, update API URL in Vercel env vars
+- **Cloud**: Deploy to Railway, Render, or Vercel (see [DEPLOYMENT_VERCEL.md](DEPLOYMENT_VERCEL.md))
 
 ### Local Development
 
-**Option 1: Full Stack (Recommended)**
+**Option 1: Full Stack**
 
 **Terminal 1 - Backend:**
 ```bash
@@ -289,46 +301,72 @@ CONFLUENCE_API_TOKEN=...
 
 ## 🚢 Deployment
 
-### Live Demo
-**Frontend**: https://memorg-ai.vercel.app  
-**Complete Guide**: [DEPLOYMENT_VERCEL.md](DEPLOYMENT_VERCEL.md)
+### Step 1: Deploy Frontend to Vercel
 
-### Quick Deploy to Vercel
-
-**Frontend**:
 ```bash
 cd enterprise-rag-frontend
+npm install
+npm run build
+vercel login  # First time only
 vercel --prod
 ```
 
-**Backend** (Python on Vercel):
+**Result**: You'll get a URL like `https://memorg-ai-xyz123.vercel.app`
+
+### Step 2: Deploy Backend (Choose One)
+
+**Option A: Keep Local (Easiest for Testing)**
+```bash
+cd enterprise-rag
+python api_server.py  # Runs on http://localhost:8000
+```
+Then in Vercel dashboard → Settings → Environment Variables:
+```
+NEXT_PUBLIC_API_URL = http://localhost:8000
+```
+
+**Option B: Deploy to Railway (Recommended for Production)**
+```bash
+cd enterprise-rag
+railway login
+railway init
+railway up
+```
+You'll get a URL like `https://memorg-backend.railway.app`
+
+**Option C: Deploy to Render**
+1. Connect GitHub repository at https://render.com
+2. Create "Web Service" pointing to `enterprise-rag` folder
+3. Build command: `pip install -r requirements.txt`
+4. Start command: `python api_server.py`
+5. Add environment variable: `OPENAI_API_KEY`
+
+**Option D: Deploy Backend to Vercel**
 ```bash
 cd enterprise-rag
 vercel --prod
 ```
 
-### Other Deployment Options
+### Step 3: Connect Frontend to Backend
 
-**Frontend Platforms**:
-- **Vercel** (recommended) - One-click Next.js deployment
-- **Netlify** - Static site hosting
-- **AWS Amplify** - Full-stack deployment
-- **Docker** - Containerized deployment
+1. Go to your Vercel project → Settings → Environment Variables
+2. Add or update:
+   ```
+   NEXT_PUBLIC_API_URL = https://your-backend-url.com
+   ```
+3. Redeploy frontend: `vercel --prod`
 
-**Backend Platforms**:
-- **Vercel** - Serverless Python functions
-- **Railway** - One-command deployment
-- **Render** - Platform as a service
-- **Google Cloud Run** - Serverless containers
-- **AWS EC2** - Virtual machine hosting
-- **Docker** - Containerized deployment
+### Verify Deployment
 
-**Data & Storage**:
-- **Local Storage** (current) - File-based for demo/small team
-- **Cloud Storage** (future) - S3/GCS for raw data at scale
-- **Managed Vector DB** (future) - Pinecone/Weaviate for distributed scale
+```bash
+# Check frontend
+curl https://your-project.vercel.app
 
-See [DEPLOYMENT_VERCEL.md](DEPLOYMENT_VERCEL.md) for detailed deployment instructions.
+# Check backend
+curl https://your-backend-url.com/api/health
+```
+
+See [DEPLOYMENT_VERCEL.md](DEPLOYMENT_VERCEL.md) for detailed guide.
 
 ---
 
