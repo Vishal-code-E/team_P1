@@ -125,7 +125,7 @@ export default function Home() {
               </div>
               <div>
                 <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  Enterprise AI Knowledge Assistant
+                  MemOrg AI
                 </h1>
                 <p className="text-sm text-slate-600">Powered by RAG + Agentic AI</p>
               </div>
