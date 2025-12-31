@@ -6,7 +6,10 @@ Transform scattered knowledge into actionable intelligence. MemOrg AI unifies Sl
 
 **Powered by OpenAI | Built on Flask | Deploy to Vercel ⬇️**
 
-> **🚀 Quick Deploy**: See instructions below to get your own deployment live in minutes!
+> **🚀 Quick Deploy**: 
+> - **Frontend**: Already deployed! https://enterprise-rag-frontend-pux7d4p5y.vercel.app
+> - **Backend**: Follow [DEPLOYMENT_QUICKSTART.md](DEPLOYMENT_QUICKSTART.md) (10 minutes)
+> - **Complete Guide**: [BACKEND_DEPLOYMENT_SUMMARY.md](BACKEND_DEPLOYMENT_SUMMARY.md)
 
 ## 🌟 Platform Highlights
 
