@@ -112,10 +112,10 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
+    <div className="flex flex-col h-screen bg-slate-100">
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm shadow-sm sticky top-0 z-10">
-        <div className="max-w-5xl mx-auto px-6 py-4">
+        <div className="max-w-[896px] mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -143,7 +143,7 @@ export default function Home() {
       {/* Notification Bar */}
       {(error || uploadSuccess) && (
         <div className="bg-white/80 backdrop-blur-sm border-b">
-          <div className="max-w-5xl mx-auto px-6 py-3">
+          <div className="max-w-[896px] mx-auto px-6 py-3">
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm flex items-center justify-between shadow-sm">
                 <div className="flex items-center gap-2">
@@ -172,10 +172,10 @@ export default function Home() {
 
       {/* Chat Messages */}
       <ScrollArea className="flex-1">
-        <div className="max-w-5xl mx-auto px-6 py-8">
+        <div className="max-w-[896px] mx-auto px-6 py-8">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center text-center py-16">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+              <div className="w-20 h-20 bg-slate-200 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
                 <svg className="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                 </svg>
