@@ -110,21 +110,29 @@ def initialize_qa_chain():
 @app.route('/health', methods=['GET'])
 @app.route('/api/health', methods=['GET'])
 def health_check():
-    """Health check endpoint"""
+    """
+    FAST health check endpoint for cold start detection.
+    Returns immediately without touching LLM/DB/vectorstore.
+    Critical for Render free tier wake-up.
+    """
     return jsonify({
         'status': 'healthy',
+        'service': 'memorg-ai-backend',
         'qa_chain_initialized': qa_chain is not None
-    })
+    }), 200
 
 
 @app.route('/chat', methods=['POST'])
 def chat():
     """
-    Main chat endpoint
+    Main chat endpoint with structured logging
     Expects: {"message": "user question"}
     Returns: {"answer": "...", "sources": [...], "confidence": "..."}
     """
+    print(f"[REQUEST] POST /chat received from {request.remote_addr}")
+    
     if not qa_chain:
+        print("[ERROR] QA chain not initialized")
         return jsonify({
             'answer': 'System not initialized. Please check backend logs.',
             'sources': [],
@@ -137,7 +145,10 @@ def chat():
         question = data.get('message', '').strip()
         
         if not question:
+            print("[VALIDATION] Empty message received")
             return jsonify({'error': 'Message is required'}), 400
+        
+        print(f"[CHAT START] Question: {question[:100]}...")
         
         # INTENT ROUTING: Decide action before RAG
         intent_decision = route_intent(question)
@@ -149,6 +160,7 @@ def chat():
         if decision == "ANSWER_DIRECTLY":
             # Conversational query - answer without retrieval
             answer = get_direct_answer(question)
+            print(f"[CHAT END] Direct answer provided")
             return jsonify({
                 'answer': answer,
                 'sources': [],
@@ -157,6 +169,7 @@ def chat():
             
         elif decision == "REFUSE":
             # Out-of-scope query - refuse safely
+            print(f"[CHAT END] Query refused (out of scope)")
             return jsonify({
                 'answer': "I don't know based on the provided documents.",
                 'sources': [],
@@ -164,7 +177,7 @@ def chat():
             })
         
         # decision == "RETRIEVE_AND_ANSWER": proceed to RAG pipeline
-        print("[Agent] Proceeding to document retrieval...")
+        print("[RAG] Starting document retrieval...")
         
         # Get answer from QA chain
         result = qa_chain.invoke({"query": question})
@@ -173,6 +186,8 @@ def chat():
         source_docs = result.get("source_documents", [])
         confidence = get_confidence(source_docs)
         answer = result["result"]
+        
+        print(f"[RAG] Retrieved {len(source_docs)} source documents")
         
         # ANSWER VERIFICATION: Validate answer is fully supported by sources
         is_valid = verify_answer(question, answer, source_docs)
@@ -188,6 +203,8 @@ def chat():
         # Handle negative case - force "I don't know" for low confidence
         if confidence == "Low" and is_valid:
             answer = "I don't know based on the provided documents."
+        
+        print(f"[CHAT END] Response ready (confidence: {confidence})")
         
         # Format response
         return jsonify({
