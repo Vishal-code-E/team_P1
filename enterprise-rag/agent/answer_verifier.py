@@ -1,4 +1,5 @@
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
+import os
 
 
 def verify_answer(question: str, answer: str, source_docs: list) -> bool:
@@ -31,10 +32,11 @@ def verify_answer(question: str, answer: str, source_docs: list) -> bool:
     # Combine all source texts
     combined_sources = "\n\n---\n\n".join(source_texts)
     
-    # Initialize Gemini Pro with zero temperature for deterministic verification
-    llm = ChatGoogleGenerativeAI(
-        model="gemini-pro",
-        temperature=0
+    # Initialize OpenAI with zero temperature for deterministic verification
+    llm = ChatOpenAI(
+        model="gpt-4",
+        temperature=0,
+        openai_api_key=os.getenv("OPENAI_API_KEY")
     )
     
     # Strict verification prompt

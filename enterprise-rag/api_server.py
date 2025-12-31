@@ -22,7 +22,20 @@ load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app)  # Enable CORS for Next.js frontend
+
+# Enable CORS for Vercel frontend and localhost dev
+CORS(app, resources={
+    r"/api/*": {
+        "origins": [
+            "https://enterprise-rag-frontend-pux7d4p5y.vercel.app",
+            "https://*.vercel.app",
+            "http://localhost:3000",
+            "http://localhost:3001"
+        ],
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"]
+    }
+})
 
 # Configuration
 UPLOAD_FOLDER = 'data/raw'
@@ -93,6 +106,7 @@ def initialize_qa_chain():
 
 
 @app.route('/health', methods=['GET'])
+@app.route('/api/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
     return jsonify({
@@ -262,9 +276,12 @@ if __name__ == '__main__':
     # Initialize QA chain on startup
     initialize_qa_chain()
     
+    # Get port from environment (Render, Railway, etc.) or default to 8000
+    port = int(os.environ.get('PORT', 8000))
+    
     print("=" * 60)
-    print("API Server starting on http://localhost:8000")
+    print(f"API Server starting on http://0.0.0.0:{port}")
     print("=" * 60)
     
     # Run Flask app (debug=False to avoid reloader issues)
-    app.run(host='0.0.0.0', port=8000, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=False)

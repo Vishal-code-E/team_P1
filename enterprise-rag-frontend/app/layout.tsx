@@ -6,8 +6,8 @@ import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "Enterprise AI Knowledge Assistant",
-  description: "RAG-powered AI assistant for enterprise knowledge management",
+  title: "MemOrg AI - Your Organization's Memory",
+  description: "Agentic AI Knowledge Platform - Transform scattered knowledge into instant, verified answers",
 };
 
 export default function RootLayout({

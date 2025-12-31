@@ -1,6 +1,7 @@
 {
-  "name": "enterprise-rag-frontend",
+  "name": "memorg-ai-frontend",
   "version": "1.0.0",
+  "description": "MemOrg AI - Your Organization's Memory",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
