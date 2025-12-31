@@ -182,7 +182,7 @@ Test on:
 ## Demo Script (5 Minutes)
 
 ### Minute 1: Introduction
-"This is an Enterprise AI Knowledge Assistant powered by RAG and Agentic AI. It intelligently answers questions about your internal documents."
+"This is MemOrg AI - Your Organization's Memory - powered by RAG and Agentic AI. It intelligently answers questions about your internal documents with source verification and no hallucinations."
 
 ### Minute 2: Basic Interaction
 1. Show welcome screen

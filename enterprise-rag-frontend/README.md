@@ -1,4 +1,6 @@
-# Enterprise AI Knowledge Assistant - Frontend
+# MemOrg AI - Frontend
+
+**Live Demo**: https://memorg-ai.vercel.app
 
 A professional, production-ready Next.js frontend for the Enterprise RAG chatbot system.
 

@@ -1,15 +1,10 @@
-# MemOrg AI
+# Enterprise RAG Platform
 
-**Your Organization's Memory - Agentic AI Knowledge Platform**
+**Agentic AI Knowledge Assistant with Multi-Source Data Ingestion**
 
-Transform scattered knowledge into actionable intelligence. MemOrg AI unifies Slack conversations, Confluence wikis, and documents into a single AI-powered knowledge base that delivers instant, source-verified answers—no more hunting through wikis, PDFs, or chat history.
+Transform scattered knowledge into actionable intelligence. Unify Slack conversations, Confluence wikis, and documents into a single AI-powered knowledge base that delivers instant, source-verified answers—no more hunting through wikis, PDFs, or chat history.
 
-**Powered by OpenAI | Built on Flask | Deploy to Vercel ⬇️**
-
-> **🚀 Quick Deploy**: 
-> - **Frontend**: Already deployed! https://enterprise-rag-frontend-pux7d4p5y.vercel.app
-> - **Backend**: Follow [DEPLOYMENT_QUICKSTART.md](DEPLOYMENT_QUICKSTART.md) (10 minutes)
-> - **Complete Guide**: [BACKEND_DEPLOYMENT_SUMMARY.md](BACKEND_DEPLOYMENT_SUMMARY.md)
+**Powered by OpenAI | Built on Flask | Designed for Enterprise Demo**
 
 ## 🌟 Platform Highlights
 
@@ -39,25 +34,7 @@ A complete data ingestion platform that handles multi-source knowledge bases wit
 
 ## 🚀 Quick Start
 
-### Deploy Your Own (Recommended)
-
-**Frontend to Vercel (2 minutes)**:
-```bash
-cd enterprise-rag-frontend
-npm install
-npm run build  # Test build locally first
-vercel --prod  # Deploy to Vercel
-```
-
-**You'll get a URL like**: `https://your-project.vercel.app`
-
-**Backend Options**:
-- **Local**: Keep backend on your machine, update API URL in Vercel env vars
-- **Cloud**: Deploy to Railway, Render, or Vercel (see [DEPLOYMENT_VERCEL.md](DEPLOYMENT_VERCEL.md))
-
-### Local Development
-
-**Option 1: Full Stack**
+### Option 1: Full Stack (Recommended)
 
 **Terminal 1 - Backend:**
 ```bash
@@ -75,22 +52,12 @@ npm run dev
 
 **Browser:** Navigate to **http://localhost:3000**
 
-**Option 2: Ingestion Platform Only**
+### Option 2: Ingestion Platform Only
 
 ```bash
 cd enterprise-rag
 pip install -r requirements.txt
 python examples/ingestion_demo.py
-```
-
-### Deploy Your Own
-
-See **[DEPLOYMENT_VERCEL.md](DEPLOYMENT_VERCEL.md)** for complete deployment guide.
-
-**Quick Deploy to Vercel:**
-```bash
-cd enterprise-rag-frontend
-vercel --prod
 ```
 
 ---
@@ -282,99 +249,24 @@ orchestrator.initialize_vector_index()
 ### Data Integrity (NEW)
 - **Immutable Storage**: Raw data never overwritten
 - **Audit Trails**: Every ingestion operation logged
-- **Version Control**: Index versions tracked
-- **Backup Strategy**: Automatic backups before rebuilds
-- **Recovery Paths**: Rebuild corrupted indexes from raw data
+- **Version CDeployment
+- **Vercel** (recommended) - One-click Next.js deployment
+- **Netlify** - Static site hosting
+- **AWS Amplify** - Full-stack deployment
+- **Docker** - Containerized deployment
 
-### Environment Variables
-```bash
-# Required
-OPENAI_API_KEY=sk-...
+### Backend Deployment
+- **Google Cloud Run** - Serverless container platform
+- **AWS EC2** - Virtual machine hosting
+- **Heroku** - Platform as a service
+- **Docker** - Containerized deployment
 
-# Optional: Slack Integration
-SLACK_BOT_TOKEN=xoxb-...
+### Data & Ingestion
+- **Local Storage** (current) - File-based for demo/small team
+- **Cloud Storage** (future) - S3/GCS for raw data at scale
+- **Managed Vector DB** (future) - Pinecone/Weaviate for distributed scale
 
-# Optional: Confluence Integration
-CONFLUENCE_URL=https://your-domain.atlassian.net
-CONFLUENCE_USERNAME=user@example.com
-CONFLUENCE_API_TOKEN=...
-```
-
----
-
-## 🚢 Deployment
-
-### Step 1: Deploy Frontend to Vercel
-
-```bash
-cd enterprise-rag-frontend
-npm install
-npm run build
-vercel login  # First time only
-vercel --prod
-```
-
-**Result**: You'll get a URL like `https://memorg-ai-xyz123.vercel.app`
-
-### Step 2: Deploy Backend (Choose One)
-
-**Option A: Keep Local (Easiest for Testing)**
-```bash
-cd enterprise-rag
-python api_server.py  # Runs on http://localhost:8000
-```
-Then in Vercel dashboard → Settings → Environment Variables:
-```
-NEXT_PUBLIC_API_URL = http://localhost:8000
-```
-
-**Option B: Deploy to Railway (Recommended for Production)**
-```bash
-cd enterprise-rag
-railway login
-railway init
-railway up
-```
-You'll get a URL like `https://memorg-backend.railway.app`
-
-**Option C: Deploy to Render**
-1. Connect GitHub repository at https://render.com
-2. Create "Web Service" pointing to `enterprise-rag` folder
-3. Build command: `pip install -r requirements.txt`
-4. Start command: `python api_server.py`
-5. Add environment variable: `OPENAI_API_KEY`
-
-**Option D: Deploy Backend to Vercel**
-```bash
-cd enterprise-rag
-vercel --prod
-```
-
-### Step 3: Connect Frontend to Backend
-
-1. Go to your Vercel project → Settings → Environment Variables
-2. Add or update:
-   ```
-   NEXT_PUBLIC_API_URL = https://your-backend-url.com
-   ```
-3. Redeploy frontend: `vercel --prod`
-
-### Verify Deployment
-
-```bash
-# Check frontend
-curl https://your-project.vercel.app
-
-# Check backend
-curl https://your-backend-url.com/api/health
-```
-
-See [DEPLOYMENT_VERCEL.md](DEPLOYMENT_VERCEL.md) for detailed guide.
-
----
-
-## 🤝 Contributing
-
+See [SETUP_GUIDE.md](SETUP_GUIDE.md) and [INGESTION_PLATFORM.md](enterprise-rag/INGESTION_PLATFORM.md) for detailed
 ### Project Philosophy
 This project combines demo readiness with production-quality architecture:
 
@@ -617,16 +509,7 @@ Built with these excellent open-source tools:
 
 ---
 
-## 📝 License
-
-This project is open source and available under the MIT License.
-
----
-
-**MemOrg AI - Your Organization's Memory** 🧠  
-**Live Demo**: https://memorg-ai.vercel.app  
-**Documentation**: https://github.com/Vishal-code-E/team_P1  
-**Questions?** Start with [QUICKSTART.md](QUICKSTART.md) or [DEPLOYMENT_VERCEL.md](DEPLOYMENT_VERCEL.md)
+**Questions? Start with [QUICKSTART.md](QUICKSTART.md) or [enterprise-rag/README_INGESTION.md](enterprise-rag/README_INGESTION.md)**
     │  System  │
     └────┬─────┘
          │
