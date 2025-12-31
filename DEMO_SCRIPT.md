@@ -1,12 +1,14 @@
 # DEMO QUICK REFERENCE
 
-**Enterprise RAG Platform - 5-Minute Demo Script**
+**MemOrg AI - 5-Minute Demo Script**
+
+**Live Demo**: https://memorg-ai.vercel.app
 
 ---
 
 ## 🎯 ELEVATOR PITCH (30 seconds)
 
-*"This is an Enterprise Agentic Knowledge Platform that transforms scattered documentation into instant, verified answers. Unlike basic chatbots, our system makes intelligent decisions about how to respond—it refuses out-of-scope questions, retrieves from your knowledge base when needed, and verifies every answer against source documents before responding. No hallucinations, no hunting through wikis."*
+*"This is MemOrg AI - Your Organization's Memory. It transforms scattered documentation into instant, verified answers. Unlike basic chatbots, our system makes intelligent decisions about how to respond—it refuses out-of-scope questions, retrieves from your knowledge base when needed, and verifies every answer against source documents before responding. No hallucinations, no hunting through wikis."*
 
 **Tech Stack**: OpenAI GPT-4, Flask backend, Next.js frontend  
 **Key Differentiator**: Agentic decision-making with answer verification

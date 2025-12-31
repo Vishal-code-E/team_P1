@@ -1,10 +1,10 @@
-# Enterprise RAG Platform
+# MemOrg AI
 
-**Agentic AI Knowledge Assistant with Multi-Source Data Ingestion**
+**Your Organization's Memory - Agentic AI Knowledge Platform**
 
-Transform scattered knowledge into actionable intelligence. Unify Slack conversations, Confluence wikis, and documents into a single AI-powered knowledge base that delivers instant, source-verified answers—no more hunting through wikis, PDFs, or chat history.
+Transform scattered knowledge into actionable intelligence. MemOrg AI unifies Slack conversations, Confluence wikis, and documents into a single AI-powered knowledge base that delivers instant, source-verified answers—no more hunting through wikis, PDFs, or chat history.
 
-**Powered by OpenAI | Built on Flask | Designed for Enterprise Demo**
+**Powered by OpenAI | Built on Flask | Live at https://memorg-ai.vercel.app**
 
 ## 🌟 Platform Highlights
 
