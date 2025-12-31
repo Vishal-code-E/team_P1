@@ -24,13 +24,15 @@ load_dotenv()
 app = Flask(__name__)
 
 # Enable CORS for Vercel frontend and localhost dev
+# Enable CORS for Vercel frontend and localhost dev
 CORS(app, resources={
     r"/api/*": {
         "origins": [
             "https://enterprise-rag-frontend-pux7d4p5y.vercel.app",
             "https://*.vercel.app",
             "http://localhost:3000",
-            "http://localhost:3001"
+            "http://localhost:3001",
+            "*"
         ],
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"]
