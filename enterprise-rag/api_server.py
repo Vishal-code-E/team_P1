@@ -83,10 +83,37 @@ def format_sources(source_documents):
 
 
 def initialize_qa_chain():
-    """Initialize the QA chain on startup"""
+    """Initialize the QA chain on startup with robust error handling"""
     global qa_chain
     
+    # CRITICAL: Validate OpenAI API key before attempting initialization
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key or api_key == "your_openai_api_key_here":
+        print("=" * 60)
+        print("ERROR: OPENAI_API_KEY not configured")
+        print("Set OPENAI_API_KEY in environment variables")
+        print("=" * 60)
+        qa_chain = None
+        return False
+    
     try:
+        # Check if raw documents exist
+        if not os.path.exists(UPLOAD_FOLDER):
+            print(f"Creating upload folder: {UPLOAD_FOLDER}")
+            os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+        
+        raw_files = [f for f in os.listdir(UPLOAD_FOLDER) if f.endswith(('.md', '.pdf', '.txt'))]
+        if not raw_files:
+            print("=" * 60)
+            print("WARNING: No documents found in data/raw/")
+            print("Add .md, .pdf, or .txt files to enable RAG")
+            print("=" * 60)
+            qa_chain = None
+            return False
+        
+        print(f"Found {len(raw_files)} documents in {UPLOAD_FOLDER}")
+        
+        # Load or create vector store
         if os.path.exists(VECTORSTORE_PATH) and os.listdir(VECTORSTORE_PATH):
             print("Loading existing vector store...")
             vectorstore = load_vectorstore(VECTORSTORE_PATH)
@@ -94,15 +121,30 @@ def initialize_qa_chain():
             print("Creating new vector store...")
             documents = load_and_chunk_documents(UPLOAD_FOLDER)
             print(f"Loaded {len(documents)} document chunks")
+            
+            if len(documents) == 0:
+                print("ERROR: No document chunks created")
+                qa_chain = None
+                return False
+            
             vectorstore = create_vectorstore(documents, VECTORSTORE_PATH)
             print("Vector store created and persisted")
         
+        # Create QA chain
         qa_chain = create_qa_chain(vectorstore)
-        print("QA chain initialized successfully")
+        print("=" * 60)
+        print("✓ QA chain initialized successfully")
+        print(f"✓ Ready to answer questions from {len(raw_files)} documents")
+        print("=" * 60)
         return True
         
     except Exception as e:
-        print(f"Initialization error: {str(e)}")
+        print("=" * 60)
+        print(f"INITIALIZATION ERROR: {str(e)}")
+        print("Server will start but /chat endpoint will return errors")
+        print("=" * 60)
+        import traceback
+        traceback.print_exc()
         qa_chain = None
         return False
 
@@ -123,6 +165,7 @@ def health_check():
 
 
 @app.route('/chat', methods=['POST'])
+@app.route('/api/chat', methods=['POST'])
 def chat():
     """
     Main chat endpoint with structured logging
@@ -151,23 +194,30 @@ def chat():
         print(f"[CHAT START] Question: {question[:100]}...")
         
         # INTENT ROUTING: Decide action before RAG
-        intent_decision = route_intent(question)
-        decision = intent_decision.get("decision")
-        
-        print(f"[Intent Router] Decision: {decision}")
+        try:
+            intent_decision = route_intent(question)
+            decision = intent_decision.get("decision")
+            print(f"[Intent Router] Decision: {decision}")
+        except Exception as e:
+            print(f"[Intent Router ERROR] {str(e)} - defaulting to RETRIEVE_AND_ANSWER")
+            decision = "RETRIEVE_AND_ANSWER"
         
         # Handle based on intent decision
         if decision == "ANSWER_DIRECTLY":
             # Conversational query - answer without retrieval
-            answer = get_direct_answer(question)
-            print(f"[CHAT END] Direct answer provided")
-            return jsonify({
-                'answer': answer,
-                'sources': [],
-                'confidence': 'High'
-            })
+            try:
+                answer = get_direct_answer(question)
+                print(f"[CHAT END] Direct answer provided")
+                return jsonify({
+                    'answer': answer,
+                    'sources': [],
+                    'confidence': 'High'
+                })
+            except Exception as e:
+                print(f"[Direct Answer ERROR] {str(e)} - falling back to RAG")
+                decision = "RETRIEVE_AND_ANSWER"
             
-        elif decision == "REFUSE":
+        if decision == "REFUSE":
             # Out-of-scope query - refuse safely
             print(f"[CHAT END] Query refused (out of scope)")
             return jsonify({
@@ -179,18 +229,31 @@ def chat():
         # decision == "RETRIEVE_AND_ANSWER": proceed to RAG pipeline
         print("[RAG] Starting document retrieval...")
         
-        # Get answer from QA chain
-        result = qa_chain.invoke({"query": question})
+        # Get answer from QA chain with error handling
+        try:
+            result = qa_chain.invoke({"query": question})
+        except Exception as e:
+            print(f"[RAG ERROR] OpenAI API call failed: {str(e)}")
+            return jsonify({
+                'answer': "I'm experiencing technical difficulties. Please try again in a moment.",
+                'sources': [],
+                'confidence': 'Low',
+                'error': 'OpenAI API error'
+            }), 500
         
         # Get source documents and calculate confidence
         source_docs = result.get("source_documents", [])
         confidence = get_confidence(source_docs)
-        answer = result["result"]
+        answer = result.get("result", "I don't know based on the provided documents.")
         
         print(f"[RAG] Retrieved {len(source_docs)} source documents")
         
         # ANSWER VERIFICATION: Validate answer is fully supported by sources
-        is_valid = verify_answer(question, answer, source_docs)
+        try:
+            is_valid = verify_answer(question, answer, source_docs)
+        except Exception as e:
+            print(f"[Verifier ERROR] {str(e)} - defaulting to INVALID")
+            is_valid = False
         
         if not is_valid:
             # Answer contains unsupported claims - override with safe refusal
@@ -224,6 +287,7 @@ def chat():
 
 
 @app.route('/upload', methods=['POST'])
+@app.route('/api/upload', methods=['POST'])
 def upload_file():
     """
     File upload endpoint
