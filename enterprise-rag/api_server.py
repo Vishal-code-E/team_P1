@@ -1,6 +1,9 @@
 """
 Flask API Server for Enterprise RAG Chatbot
 Provides REST endpoints for the Next.js frontend
+
+CRITICAL: All OpenAI/Chroma imports are DEFERRED to function scope
+to prevent gunicorn worker crashes on cold start.
 """
 
 import os
@@ -10,20 +13,12 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 
-# Import existing chatbot modules
-from ingest.load_docs import load_and_chunk_documents
-from rag.retriever import create_vectorstore, load_vectorstore
-from rag.qa_chain import create_qa_chain
-from agent.intent_router import route_intent, get_direct_answer
-from agent.answer_verifier import verify_answer
-
-# Load environment variables
+# Load environment variables at import time (safe - no API calls)
 load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
 
-# Enable CORS for Vercel frontend and localhost dev
 # Enable CORS for Vercel frontend and localhost dev
 CORS(app, resources={
     r"/api/*": {
@@ -44,8 +39,9 @@ UPLOAD_FOLDER = 'data/raw'
 VECTORSTORE_PATH = 'data/vectorstore'
 ALLOWED_EXTENSIONS = {'md', 'pdf', 'txt'}
 
-# Global QA chain (initialized on startup)
+# Global QA chain (lazy-initialized on first /chat request)
 qa_chain = None
+initialization_error = None
 
 
 def allowed_file(filename):
@@ -83,20 +79,43 @@ def format_sources(source_documents):
 
 
 def initialize_qa_chain():
-    """Initialize the QA chain on startup with robust error handling"""
-    global qa_chain
+    """
+    Initialize the QA chain with DEFERRED imports.
     
-    # CRITICAL: Validate OpenAI API key before attempting initialization
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key or api_key == "your_openai_api_key_here":
-        print("=" * 60)
-        print("ERROR: OPENAI_API_KEY not configured")
-        print("Set OPENAI_API_KEY in environment variables")
-        print("=" * 60)
-        qa_chain = None
+    CRITICAL: All AI/DB imports happen INSIDE this function
+    to prevent import-time crashes in gunicorn workers.
+    
+    Returns:
+        bool: True if successful, False otherwise
+    """
+    global qa_chain, initialization_error
+    
+    # If already initialized, skip
+    if qa_chain is not None:
+        return True
+    
+    # If previous initialization failed, don't retry every request
+    if initialization_error is not None:
         return False
     
     try:
+        print("=" * 60)
+        print("INITIALIZING QA CHAIN (lazy load on first request)")
+        print("=" * 60)
+        
+        # DEFERRED IMPORTS: Only import when actually needed
+        from ingest.load_docs import load_and_chunk_documents
+        from rag.retriever import create_vectorstore, load_vectorstore
+        from rag.qa_chain import create_qa_chain
+        
+        # Validate OpenAI API key
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key or api_key == "your_openai_api_key_here":
+            error_msg = "OPENAI_API_KEY not configured in environment"
+            print(f"ERROR: {error_msg}")
+            initialization_error = error_msg
+            return False
+        
         # Check if raw documents exist
         if not os.path.exists(UPLOAD_FOLDER):
             print(f"Creating upload folder: {UPLOAD_FOLDER}")
@@ -104,11 +123,9 @@ def initialize_qa_chain():
         
         raw_files = [f for f in os.listdir(UPLOAD_FOLDER) if f.endswith(('.md', '.pdf', '.txt'))]
         if not raw_files:
-            print("=" * 60)
-            print("WARNING: No documents found in data/raw/")
-            print("Add .md, .pdf, or .txt files to enable RAG")
-            print("=" * 60)
-            qa_chain = None
+            error_msg = "No documents found in data/raw/"
+            print(f"WARNING: {error_msg}")
+            initialization_error = error_msg
             return False
         
         print(f"Found {len(raw_files)} documents in {UPLOAD_FOLDER}")
@@ -123,8 +140,9 @@ def initialize_qa_chain():
             print(f"Loaded {len(documents)} document chunks")
             
             if len(documents) == 0:
-                print("ERROR: No document chunks created")
-                qa_chain = None
+                error_msg = "No document chunks created"
+                print(f"ERROR: {error_msg}")
+                initialization_error = error_msg
                 return False
             
             vectorstore = create_vectorstore(documents, VECTORSTORE_PATH)
@@ -139,13 +157,13 @@ def initialize_qa_chain():
         return True
         
     except Exception as e:
+        error_msg = str(e)
         print("=" * 60)
-        print(f"INITIALIZATION ERROR: {str(e)}")
-        print("Server will start but /chat endpoint will return errors")
+        print(f"INITIALIZATION ERROR: {error_msg}")
         print("=" * 60)
         import traceback
         traceback.print_exc()
-        qa_chain = None
+        initialization_error = error_msg
         return False
 
 
@@ -154,8 +172,10 @@ def initialize_qa_chain():
 def health_check():
     """
     FAST health check endpoint for cold start detection.
-    Returns immediately without touching LLM/DB/vectorstore.
-    Critical for Render free tier wake-up.
+    
+    CRITICAL: Returns immediately without touching LLM/DB/vectorstore.
+    No imports, no API calls, no file I/O.
+    Essential for Render free tier wake-up.
     """
     return jsonify({
         'status': 'healthy',
@@ -168,30 +188,51 @@ def health_check():
 @app.route('/api/chat', methods=['POST'])
 def chat():
     """
-    Main chat endpoint with structured logging
+    Main chat endpoint with lazy initialization and comprehensive error handling.
+    
+    ALWAYS returns JSON, even on errors.
     Expects: {"message": "user question"}
     Returns: {"answer": "...", "sources": [...], "confidence": "..."}
     """
-    print(f"[REQUEST] POST /chat received from {request.remote_addr}")
-    
-    if not qa_chain:
-        print("[ERROR] QA chain not initialized")
-        return jsonify({
-            'answer': 'System not initialized. Please check backend logs.',
-            'sources': [],
-            'confidence': 'Low',
-            'error': 'QA chain not initialized'
-        }), 500
-    
     try:
-        data = request.get_json()
-        question = data.get('message', '').strip()
+        print(f"[REQUEST] POST /chat received from {request.remote_addr}")
         
+        # Lazy initialization on first request
+        if qa_chain is None:
+            print("[INIT] QA chain not initialized, attempting lazy load...")
+            success = initialize_qa_chain()
+            if not success:
+                return jsonify({
+                    'answer': 'System initialization failed. Please contact support.',
+                    'sources': [],
+                    'confidence': 'Low',
+                    'error': initialization_error or 'Initialization failed'
+                }), 503
+        
+        # Parse request
+        data = request.get_json()
+        if not data:
+            return jsonify({
+                'answer': 'Invalid request format',
+                'sources': [],
+                'confidence': 'Low',
+                'error': 'Request body must be JSON'
+            }), 400
+        
+        question = data.get('message', '').strip()
         if not question:
-            print("[VALIDATION] Empty message received")
-            return jsonify({'error': 'Message is required'}), 400
+            return jsonify({
+                'answer': 'Please provide a message',
+                'sources': [],
+                'confidence': 'Low',
+                'error': 'Message field is required'
+            }), 400
         
         print(f"[CHAT START] Question: {question[:100]}...")
+        
+        # DEFERRED IMPORTS: Only import agent modules when needed
+        from agent.intent_router import route_intent, get_direct_answer
+        from agent.answer_verifier import verify_answer
         
         # INTENT ROUTING: Decide action before RAG
         try:
@@ -212,7 +253,7 @@ def chat():
                     'answer': answer,
                     'sources': [],
                     'confidence': 'High'
-                })
+                }), 200
             except Exception as e:
                 print(f"[Direct Answer ERROR] {str(e)} - falling back to RAG")
                 decision = "RETRIEVE_AND_ANSWER"
@@ -224,7 +265,7 @@ def chat():
                 'answer': "I don't know based on the provided documents.",
                 'sources': [],
                 'confidence': 'Low'
-            })
+            }), 200
         
         # decision == "RETRIEVE_AND_ANSWER": proceed to RAG pipeline
         print("[RAG] Starting document retrieval...")
@@ -238,7 +279,7 @@ def chat():
                 'answer': "I'm experiencing technical difficulties. Please try again in a moment.",
                 'sources': [],
                 'confidence': 'Low',
-                'error': 'OpenAI API error'
+                'error': f'OpenAI API error: {str(e)}'
             }), 500
         
         # Get source documents and calculate confidence
@@ -274,12 +315,15 @@ def chat():
             'answer': answer,
             'sources': format_sources(source_docs),
             'confidence': confidence
-        })
+        }), 200
         
     except Exception as e:
-        print(f"Chat error: {str(e)}")
+        # Catch-all error handler - ALWAYS return JSON
+        print(f"[CRITICAL ERROR] Unhandled exception: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return jsonify({
-            'answer': f'Error processing request: {str(e)}',
+            'answer': 'An unexpected error occurred. Please try again.',
             'sources': [],
             'confidence': 'Low',
             'error': str(e)
@@ -290,31 +334,33 @@ def chat():
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
     """
-    File upload endpoint
-    Accepts multipart/form-data with 'file' field
+    File upload endpoint with automatic re-indexing.
+    
+    ALWAYS returns JSON.
+    Accepts multipart/form-data with 'file' field.
     Returns: {"success": true, "message": "..."}
     """
-    if 'file' not in request.files:
-        return jsonify({
-            'success': False,
-            'message': 'No file provided'
-        }), 400
-    
-    file = request.files['file']
-    
-    if file.filename == '':
-        return jsonify({
-            'success': False,
-            'message': 'No file selected'
-        }), 400
-    
-    if not allowed_file(file.filename):
-        return jsonify({
-            'success': False,
-            'message': f'Invalid file type. Allowed: {", ".join(ALLOWED_EXTENSIONS)}'
-        }), 400
-    
     try:
+        if 'file' not in request.files:
+            return jsonify({
+                'success': False,
+                'message': 'No file provided'
+            }), 400
+        
+        file = request.files['file']
+        
+        if file.filename == '':
+            return jsonify({
+                'success': False,
+                'message': 'No file selected'
+            }), 400
+        
+        if not allowed_file(file.filename):
+            return jsonify({
+                'success': False,
+                'message': f'Invalid file type. Allowed: {", ".join(ALLOWED_EXTENSIONS)}'
+            }), 400
+        
         # Save file
         filename = secure_filename(file.filename)
         os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -330,6 +376,11 @@ def upload_file():
         if os.path.exists(VECTORSTORE_PATH):
             shutil.rmtree(VECTORSTORE_PATH)
         
+        # Reset global state to force re-initialization
+        global qa_chain, initialization_error
+        qa_chain = None
+        initialization_error = None
+        
         # Reinitialize QA chain with new documents
         success = initialize_qa_chain()
         
@@ -337,34 +388,40 @@ def upload_file():
             return jsonify({
                 'success': True,
                 'message': f'Successfully uploaded and indexed {filename}'
-            })
+            }), 200
         else:
             return jsonify({
                 'success': False,
-                'message': f'File uploaded but indexing failed. Check backend logs.'
+                'message': f'File uploaded but indexing failed: {initialization_error}'
             }), 500
             
     except Exception as e:
         print(f"Upload error: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return jsonify({
             'success': False,
             'message': f'Upload failed: {str(e)}'
         }), 500
 
 
+# Gunicorn entry point - NO initialization here
+# QA chain will be lazy-loaded on first /chat request
 if __name__ == '__main__':
-    print("Initializing Enterprise RAG API Server...")
+    # Only runs in development mode (not under gunicorn)
+    print("=" * 60)
+    print("DEVELOPMENT MODE: Flask dev server")
     print("=" * 60)
     
-    # Initialize QA chain on startup
+    # Pre-initialize in dev mode for faster first request
     initialize_qa_chain()
     
-    # Get port from environment (Render, Railway, etc.) or default to 8000
+    # Get port from environment or default to 8000
     port = int(os.environ.get('PORT', 8000))
     
     print("=" * 60)
     print(f"API Server starting on http://0.0.0.0:{port}")
     print("=" * 60)
     
-    # Run Flask app (debug=False to avoid reloader issues)
+    # Run Flask app
     app.run(host='0.0.0.0', port=port, debug=False)
