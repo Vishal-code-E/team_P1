@@ -1,0 +1,9 @@
+{
+    "buildCommand": "cd enterprise-rag-frontend && npm run build",
+    "outputDirectory": "enterprise-rag-frontend/.next",
+    "installCommand": "cd enterprise-rag-frontend && npm install",
+    "framework": "nextjs",
+    "regions": [
+        "iad1"
+    ]
+}
