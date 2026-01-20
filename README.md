@@ -1,6 +1,6 @@
 # MemOrg AI - Enterprise Knowledge Intelligence
 
-**🚀 LIVE PRODUCTION DEPLOYMENT - Try It Now!**
+** LIVE PRODUCTION DEPLOYMENT - Try It Now!**
 
 **Your Organization's Memory, Powered by GPT-4 Turbo**
 
@@ -8,21 +8,21 @@
 
 MemOrg AI is a production-ready enterprise RAG platform that transforms scattered organizational knowledge into instant, verified answers. Built with GPT-4 Turbo, it unifies Slack conversations, Confluence wikis, and documents into a single AI-powered knowledge base with zero-hallucination guarantee.
 
-## 🎯 Unique Value Proposition
+##  Unique Value Proposition
 
 **What Makes MemOrg AI Different:**
 
-1. **🛡️ Zero-Hallucination Architecture** - Triple-layer validation (Intent Router → RAG → Answer Verifier) ensures every answer is grounded in your documents
-2. **⚡ Production-Hardened** - Cold-start resilient with automatic retries, 45s timeouts, and structured logging for enterprise reliability
-3. **🔄 Multi-Source Intelligence** - Native Slack, Confluence, PDF, and Markdown ingestion with immutable storage and source attribution
-4. **🎨 Enterprise-Grade UX** - ChatGPT-style interface with confidence indicators, live document upload, and mobile optimization
-5. **📊 Full Observability** - Every request tracked with [REQUEST] → [CHAT START] → [RAG] → [CHAT END] logging for debugging and compliance
+1. ** Zero-Hallucination Architecture** - Triple-layer validation (Intent Router → RAG → Answer Verifier) ensures every answer is grounded in your documents
+2. ** Production-Hardened** - Cold-start resilient with automatic retries, 45s timeouts, and structured logging for enterprise reliability
+3. ** Multi-Source Intelligence** - Native Slack, Confluence, PDF, and Markdown ingestion with immutable storage and source attribution
+4. ** Enterprise-Grade UX** - ChatGPT-style interface with confidence indicators, live document upload, and mobile optimization
+5. ** Full Observability** - Every request tracked with [REQUEST] → [CHAT START] → [RAG] → [CHAT END] logging for debugging and compliance
 
 **Powered by GPT-4 Turbo | OpenAI Embeddings | ChromaDB | Next.js 14 | Flask**
 
 ---
 
-## 🌐 Live Production URLs
+##  Live Production URLs
 
 - **Frontend**: https://enterprise-rag-frontend.vercel.app
 - **Backend API**: https://memorg-ai.onrender.com
@@ -30,29 +30,29 @@ MemOrg AI is a production-ready enterprise RAG platform that transforms scattere
 
 ---
 
-## ✨ Production Features
+##  Production Features
 
-### **🤖 Intelligent AI Agents**
+### ** Intelligent AI Agents**
 - **Intent Router**: GPT-4 Turbo classifies queries (RETRIEVE/REFUSE/ANSWER_DIRECTLY)
 - **RAG Pipeline**: Retrieves top-K documents with semantic search (OpenAI embeddings 1536D)
 - **Answer Verifier**: Validates every claim against source documents - refuses to hallucinate
 - **Source Attribution**: Full citation chain from answer → document → original file
 
-### **🏗️ Production-Ready Architecture**
+### ** Production-Ready Architecture**
 - **Cold-Start Resilient**: 5s health check wake-up before requests
 - **Automatic Retry**: 45s timeout with 1 retry attempt and 2s delay
 - **Structured Logging**: [REQUEST] → [Intent Router] → [RAG] → [Verifier] → [CHAT END]
 - **Gunicorn WSGI**: 120s timeout, single worker optimized for Render free tier
 - **CORS Enabled**: Secure cross-origin requests for Vercel → Render communication
 
-### **💾 Enterprise Ingestion Platform**
+### ** Enterprise Ingestion Platform**
 - **Multi-Source**: Slack (API + exports), Confluence (Cloud/Server), PDF, Markdown, Text
 - **Immutable Storage**: Raw data preserved for re-indexing and compliance
 - **Vector Store**: ChromaDB with OpenAI text-embedding-3-small (1536 dimensions)
 - **Metadata Tracking**: Full lineage from source URL to embedded chunk
 - **Atomic Operations**: Safe index rebuilds without downtime
 
-### **🎨 Modern Frontend (Next.js 14)**
+### ** Modern Frontend (Next.js 14)**
 - **ChatGPT-Style UI**: Streaming responses, message history, real-time updates
 - **Confidence Badges**: Visual HIGH/MEDIUM/LOW indicators for answer quality
 - **Document Upload**: Drag-and-drop with live re-indexing
@@ -61,10 +61,10 @@ MemOrg AI is a production-ready enterprise RAG platform that transforms scattere
 
 ---
 
-## 🚀 Quick Start - Try It Now
+##  Quick Start - Try It Now
 
 ### Use Production System
-👉 **Visit**: https://enterprise-rag-frontend.vercel.app
+ **Visit**: https://enterprise-rag-frontend.vercel.app
 
 **Sample Questions:**
 - "What is AWS Budget policy?"
@@ -97,7 +97,7 @@ npm run dev  # Runs on http://localhost:3000
 
 ---
 
-## 🔧 Technical Stack
+##  Technical Stack
 
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
@@ -112,7 +112,7 @@ npm run dev  # Runs on http://localhost:3000
 
 ---
 
-## 📊 Production Deployment
+##  Production Deployment
 
 ### Current Production Setup
 
@@ -155,7 +155,7 @@ vercel --prod
 
 ---
 
-## 📂 Repository Structure
+##  Repository Structure
 
 ```
 team_P1/
@@ -163,11 +163,11 @@ team_P1/
 │   ├── api_server.py                 # Flask API server
 │   ├── app.py                        # CLI interface
 │   │
-│   ├── storage/                      # 🆕 Data Storage Layer
+│   ├── storage/                      #    Data Storage Layer
 │   │   ├── metadata.py              #     Metadata models
 │   │   └── raw_storage.py           #     Immutable raw data storage
 │   │
-│   ├── ingest/                       # 🆕 Ingestion Pipeline
+│   ├── ingest/                       #  Ingestion Pipeline
 │   │   ├── orchestrator.py          #     High-level API
 │   │   ├── slack_ingestion.py       #     Slack API + exports
 │   │   ├── confluence_ingestion.py  #     Confluence Cloud/Server
@@ -185,25 +185,25 @@ team_P1/
 │   │   └── retriever.py             # Vector retrieval
 │   │
 │   └── data/                         # Data Storage
-│       ├── raw/                      # 🆕 Immutable source data
+│       ├── raw/                      #  Immutable source data
 │       │   ├── slack/               #     Slack conversations
 │       │   ├── confluence/          #     Wiki pages
 │       │   └── uploads/             #     Uploaded files
 │       ├── vectorstore/              #     Chroma vector DB
-│       └── ingestion_logs/           # 🆕 Audit trail
+│       └── ingestion_logs/           #  Audit trail
 │
 ├── enterprise-rag-frontend/           # Next.js Frontend
 │   ├── app/                          # Pages & API routes
 │   ├── components/                   # React components
 │   └── types/                        # TypeScript definitions
 │
-├── 📖 Documentation/
+├──  Documentation/
 │   ├── QUICKSTART.md                 # 30-second setup
 │   ├── SETUP_GUIDE.md                # Detailed installation
 │   ├── ARCHITECTURE.md               # System design
 │   ├── DEMO_GUIDE.md                 # Testing scenarios
 │   │
-│   └── enterprise-rag/               # 🆕 Ingestion Platform Docs
+│   └── enterprise-rag/               #  Ingestion Platform Docs
 │       ├── README_INGESTION.md       #     Platform overview
 │       ├── PLATFORM_SUMMARY.md       #     Executive summary
 │       ├── QUICKSTART_INGESTION.md   #     Quick start guide
@@ -211,12 +211,12 @@ team_P1/
 │       └── TECHNICAL_REFERENCE.md    #     Architecture deep dive
 │
 └── examples/
-    └── ingestion_demo.py             # 🆕 Runnable demonstration
+    └── ingestion_demo.py             #  Runnable demonstration
 ```
 
 ---
 
-## 🎯 Key Features
+##  Key Features
 
 ### **Zero-Hallucination Guarantee**
 MemOrg AI uses a triple-validation architecture:
@@ -227,29 +227,29 @@ MemOrg AI uses a triple-validation architecture:
 **Result**: Answers are always grounded in your documents, or the system refuses to answer.
 
 ### **Production-Hardened Deployment**
-- ✅ Cold-start resilient (5s health check + 45s timeout)
-- ✅ Automatic retry with exponential backoff
-- ✅ Structured logging for debugging ([REQUEST] → [RAG] → [END])
-- ✅ Optimized for Render free tier (120s gunicorn timeout)
-- ✅ CORS-enabled for secure cross-origin requests
+-  Cold-start resilient (5s health check + 45s timeout)
+-  Automatic retry with exponential backoff
+-  Structured logging for debugging ([REQUEST] → [RAG] → [END])
+-  Optimized for Render free tier (120s gunicorn timeout)
+-  CORS-enabled for secure cross-origin requests
 
 ### **Enterprise Data Ingestion**
-- 📥 Slack conversations (API + exports)
-- 📥 Confluence wikis (Cloud + Server)
-- 📥 PDF, Markdown, Text files
-- 💾 Immutable storage with full source attribution
-- 🔄 Live re-indexing on document upload
+-  Slack conversations (API + exports)
+-  Confluence wikis (Cloud + Server)
+-  PDF, Markdown, Text files
+-  Immutable storage with full source attribution
+-  Live re-indexing on document upload
 
 ### **Modern User Experience**
-- 💬 ChatGPT-style streaming interface
-- 🎯 Confidence badges (HIGH/MEDIUM/LOW)
-- 📱 Mobile-responsive design
-- 📚 Source citations with clickable links
-- ⚡ Real-time document upload
+-  ChatGPT-style streaming interface
+-  Confidence badges (HIGH/MEDIUM/LOW)
+-  Mobile-responsive design
+-  Source citations with clickable links
+-  Real-time document upload
 
 ---
 
-## 💡 Use Cases
+##  Use Cases
 
 - **Customer Support**: Instant answers from internal knowledge base
 - **Employee Onboarding**: Self-service access to company policies and procedures
@@ -259,7 +259,7 @@ MemOrg AI uses a triple-validation architecture:
 
 ---
 
-## 📈 Performance Metrics
+##  Performance Metrics
 
 | Metric | Value |
 |--------|-------|
@@ -295,41 +295,41 @@ MemOrg AI uses a triple-validation architecture:
 
 ---
 
-## ✅ Production Checklist
+##  Production Checklist
 
 ### Deployment Status
-- ✅ Frontend deployed to Vercel (main branch)
-- ✅ Backend deployed to Render (main branch)
-- ✅ OpenAI API key configured
-- ✅ Vector store regenerated with OpenAI embeddings (1536D)
-- ✅ Environment variables set (NEXT_PUBLIC_API_URL)
-- ✅ CORS enabled for cross-origin requests
-- ✅ Health check endpoint working
-- ✅ Cold-start resilience tested
-- ✅ Retry logic validated
-- ✅ Structured logging enabled
+-  Frontend deployed to Vercel (main branch)
+-  Backend deployed to Render (main branch)
+-  OpenAI API key configured
+-  Vector store regenerated with OpenAI embeddings (1536D)
+-  Environment variables set (NEXT_PUBLIC_API_URL)
+-  CORS enabled for cross-origin requests
+-  Health check endpoint working
+-  Cold-start resilience tested
+-  Retry logic validated
+-  Structured logging enabled
 
 ### Tested Components
-- ✅ Intent Router (GPT-4 Turbo)
-- ✅ RAG Pipeline (ChromaDB + OpenAI)
-- ✅ Answer Verifier (hallucination prevention)
-- ✅ Frontend-Backend integration
-- ✅ Document upload and re-indexing
-- ✅ Source attribution
-- ✅ Confidence indicators
+-  Intent Router (GPT-4 Turbo)
+-  RAG Pipeline (ChromaDB + OpenAI)
+-  Answer Verifier (hallucination prevention)
+-  Frontend-Backend integration
+-  Document upload and re-indexing
+-  Source attribution
+-  Confidence indicators
 
 ---
 
-## 🎬 Demo Instructions
+##  Demo Instructions
 
 ### Quick Demo (2 minutes)
 1. Visit: https://enterprise-rag-frontend.vercel.app
 2. Ask: "What is AWS Budget policy?"
 3. Observe:
-   - ✅ Answer from GPT-4 Turbo
-   - ✅ Source document citation
-   - ✅ Confidence indicator (HIGH/MEDIUM/LOW)
-   - ✅ Response time <5s
+   -  Answer from GPT-4 Turbo
+   -  Source document citation
+   -  Confidence indicator (HIGH/MEDIUM/LOW)
+   -  Response time <5s
 
 ### Full Demo (5 minutes)
 1. **Test Knowledge**: Ask 3-5 questions about your documents
@@ -340,18 +340,18 @@ MemOrg AI uses a triple-validation architecture:
 
 ---
 
-## 🚀 Future Roadmap
+##  Future Roadmap
 
-- [ ] Multi-tenant support with user authentication
-- [ ] Advanced analytics dashboard (query patterns, popular topics)
-- [ ] Webhook integrations (auto-index on Slack/Confluence updates)
-- [ ] Custom embedding models for domain-specific knowledge
-- [ ] Question suggestion based on document content
-- [ ] Conversation memory for multi-turn dialogues
+-  Multi-tenant support with user authentication
+-  Advanced analytics dashboard (query patterns, popular topics)
+-  Webhook integrations (auto-index on Slack/Confluence updates)
+-  Custom embedding models for domain-specific knowledge
+-  Question suggestion based on document content
+-  Conversation memory for multi-turn dialogues
 
 ---
 
-## 📞 Support & Contributing
+##  Support & Contributing
 
 **Issues**: Open an issue on GitHub
 **Questions**: Create a discussion
@@ -359,13 +359,13 @@ MemOrg AI uses a triple-validation architecture:
 
 ---
 
-## 📄 License
+##  License
 
 MIT License - See [LICENSE](LICENSE) for details
 
 ---
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 Built with:
 - **OpenAI** - GPT-4 Turbo and text-embedding-3-small
@@ -376,9 +376,9 @@ Built with:
 
 ---
 
-**⭐ Star this repo if MemOrg AI helped you!**
+** Star this repo if MemOrg AI helped you!**
 
-**🚀 Live Demo**: https://enterprise-rag-frontend.vercel.app
+** Live Demo**: https://enterprise-rag-frontend.vercel.app
 3. **Highlight**: Show sources and confidence levels
 4. **Upload**: Demonstrate live document upload
 5. **Error**: Show graceful error handling
@@ -416,7 +416,7 @@ CONFLUENCE_API_TOKEN=...
 
 ---
 
-## 🚢 Deployment
+##  Deployment
 
 ### Step 1: Deploy Frontend to Vercel
 
@@ -487,7 +487,7 @@ See [DEPLOYMENT_VERCEL.md](DEPLOYMENT_VERCEL.md) for detailed guide.
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 ### Project Philosophy
 This project combines demo readiness with production-quality architecture:
@@ -503,25 +503,25 @@ This project combines demo readiness with production-quality architecture:
 
 **Add New Data Source:**
 1. Create `ingest/{source}_ingestion.py`
-## 🌟 What Makes This Production-Ready
+##  What Makes This Production-Ready
 
 ### Data Integrity
-- ✅ **Immutable Storage** - Raw data preserved for re-indexing
-- ✅ **Audit Trails** - Every operation logged with timestamps
-- ✅ **Version Control** - Track index versions, enable rollback
-- ✅ **Metadata Preservation** - Full provenance from source → answer
+-  **Immutable Storage** - Raw data preserved for re-indexing
+-  **Audit Trails** - Every operation logged with timestamps
+-  **Version Control** - Track index versions, enable rollback
+-  **Metadata Preservation** - Full provenance from source → answer
 
 ### Operational Safety
-- ✅ **Backup Strategy** - Automatic backups before destructive operations
-- ✅ **Error Handling** - Graceful failures, partial successes preserved
-- ✅ **Recovery Paths** - Rebuild corrupted data from raw sources
-- ✅ **Atomic Operations** - No partial states, clean rollbacks
+-  **Backup Strategy** - Automatic backups before destructive operations
+-  **Error Handling** - Graceful failures, partial successes preserved
+-  **Recovery Paths** - Rebuild corrupted data from raw sources
+-  **Atomic Operations** - No partial states, clean rollbacks
 
 ### Observability
-- ✅ **Structured Logging** - Console + file, multiple severity levels
-- ✅ **Metrics Tracking** - Document counts, success/failure rates
-- ✅ **History Queries** - Audit ingestion operations over time
-- ✅ **Debug9+
+-  **Structured Logging** - Console + file, multiple severity levels
+-  **Metrics Tracking** - Document counts, success/failure rates
+-  **History Queries** - Audit ingestion operations over time
+-  **Debug9+
 - Node.js 18+ (for frontend)
 - Google API key (for embeddings & LLM)
 - (Optional) Slack bot token
@@ -549,19 +549,19 @@ npm install
 npm run dev
 ```
 
-## 📝 License
+##  License
 
 This project is open source and available under the MIT License.
 
 ---
 
-## 🔧 Common Issuesential features
+##  Common Issuesential features
 - **Quality**: Production-ready code
 - **Purpose**: Demo-ready and judge-friendly
 
 ---
 
-## 📄 License
+##  License
 
 See individual component licenses. This project combines open-source technologies for educational/demo purposes.
 
@@ -572,7 +572,7 @@ See individual component licenses. This project combines open-source technologie
 
 Company wikis are where docs go to die. Point this tool at your Confluence, PDFs and Slack history; ask "What's our AWS spending limit?" and get an instant, source-linked answer instead of ten blue links nobody clicks.
 
-## 🎯 Features
+##  Features
 
 - **Multi-Source Knowledge Ingestion**: Load documents from PDFs, Confluence wikis, and Slack conversations
 - **Intelligent Search**: Vector-based semantic search using OpenAI embeddings
@@ -581,7 +581,7 @@ Company wikis are where docs go to die. Point this tool at your Confluence, PDFs
 - **Modern Web UI**: Clean, responsive interface for chatting and document management
 - **REST API**: Full API access for integration with other tools
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 
@@ -634,7 +634,7 @@ SLACK_BOT_TOKEN=xoxb-your-slack-bot-token
 SLACK_APP_TOKEN=xapp-your-slack-app-token
 ```
 
-## 📖 Usage
+##  Usage
 
 ### Web Interface
 
@@ -718,7 +718,7 @@ orchestrator.rebuild_vector_index(backup=True)
 
 ---
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 Built with these excellent open-source tools:
 - **LangChain** - RAG orchestration framework
@@ -731,7 +731,7 @@ Built with these excellent open-source tools:
 
 ---
 
-## 📝 License
+##  License
 
 This project is open source and available under the MIT License.
 
@@ -765,26 +765,26 @@ This project is open source and available under the MIT License.
 - **LangChain**: RAG pipeline and document processing
 - **OpenAI**: Embeddings (text-embedding-3-small) and LLM (GPT-4)
 
-## 📚 API Documentation
+##  API Documentation
 
 Once running, visit `http://localhost:8000/docs` for interactive API documentation.
 
-## 🔒 Security Notes
+##  Security Notes
 
 - Never commit your `.env` file
 - Keep API keys secure
 - Use environment variables for all sensitive data
 - Confluence and Slack tokens should have minimal required permissions
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 📝 License
+##  License
 
 This project is open source and available under the MIT License.
 
-## 🆘 Troubleshooting
+##  Troubleshooting
 
 ### "No such file or directory" errors
 Make sure all required directories exist:
@@ -802,6 +802,6 @@ mkdir -p data/chroma uploads static templates
 - Ensure bot is added to the channel you want to read
 - Use channel ID, not channel name
 
-## 📧 Support
+##  Support
 
 For issues and questions, please open an issue on GitHub.
