@@ -31,6 +31,10 @@ class Settings(BaseSettings):
     # Model Settings
     embedding_model: str = "text-embedding-3-small"
     llm_model: str = "gpt-4-turbo-preview"
+    # LLM provider: "openai" or "anthropic"
+    llm_provider: str = "openai"
+    # Anthropic model to use when llm_provider is "anthropic"
+    anthropic_model: str = "claude-sonnet-4-5"
     chunk_size: int = 1000
     chunk_overlap: int = 200
     

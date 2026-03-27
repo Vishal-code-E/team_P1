@@ -8,16 +8,28 @@ from ..core.config import settings
 from ..core.vector_store import vector_store
 
 
+def _build_llm():
+    """Build the LLM based on the configured provider."""
+    if settings.llm_provider.lower() == "anthropic":
+        from langchain_anthropic import ChatAnthropic
+        return ChatAnthropic(
+            anthropic_api_key=settings.anthropic_api_key,
+            model_name=settings.anthropic_model,
+            temperature=0.3,
+        )
+    return ChatOpenAI(
+        openai_api_key=settings.openai_api_key,
+        model_name=settings.llm_model,
+        temperature=0.3,
+    )
+
+
 class RAGSystem:
     """Retrieval-Augmented Generation system for question answering."""
     
     def __init__(self):
         """Initialize the RAG system."""
-        self.llm = ChatOpenAI(
-            openai_api_key=settings.openai_api_key,
-            model_name=settings.llm_model,
-            temperature=0.3
-        )
+        self.llm = _build_llm()
         
         # Custom prompt template for better answers
         self.prompt_template = """You are a helpful AI assistant that answers questions based on the company's knowledge base.
